@@ -51,122 +51,92 @@ const Home = ({ selectedCategory }) => {
 
   if (isError) {
     return (
-      <h2 className="text-center" style={{ padding: "18rem" }}>
-      <img src={unplugged} alt="Error" style={{ width: '100px', height: '100px' }}/>
-      </h2>
+      <section className="home-shell">
+        <div className="empty-state">
+          <img src={unplugged} alt="Connection error" />
+          <h2>Unable to load products</h2>
+          <p>Please check that the backend server is running.</p>
+        </div>
+      </section>
     );
   }
   return (
-    <>
-      <div
-        className="grid"
-        style={{
-          marginTop: "64px",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "20px",
-          padding: "20px",
-        }}
-      >
+    <main className="home-shell">
+      <section className="store-hero">
+        <div>
+          <span className="store-kicker">Curated Product Store</span>
+          <h1>Find products that fit your day.</h1>
+          <p>
+            Browse electronics, fashion, and everyday essentials with fast
+            product search and easy cart management.
+          </p>
+        </div>
+        <div className="store-stats" aria-label="Store summary">
+          <span>{filteredProducts.length}</span>
+          <small>Products available</small>
+        </div>
+      </section>
+
+      <section className="product-toolbar">
+        <div>
+          <span className="toolbar-label">Showing</span>
+          <h2>{selectedCategory || "All Products"}</h2>
+        </div>
+      </section>
+
+      <div className="product-grid">
         {filteredProducts.length === 0 ? (
-          <h2
-            className="text-center"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            No Products Available
-          </h2>
+          <div className="empty-state">
+            <h2>No products available</h2>
+            <p>Try another category or add a new product.</p>
+          </div>
         ) : (
           filteredProducts.map((product) => {
             const { id, brand, name, price, productAvailable, imageUrl } =
               product;
-            const cardStyle = {
-              width: "18rem",
-              height: "12rem",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
-              backgroundColor: productAvailable ? "#fff" : "#ccc",
-            };
             return (
               <div
-                className="card mb-3"
-                style={{
-                  width: "250px",
-                  height: "360px",
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-                  borderRadius: "10px",
-                  overflow: "hidden", 
-                  backgroundColor: productAvailable ? "#fff" : "#ccc",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent:'flex-start',
-                  alignItems:'stretch'
-                }}
+                className={`product-card-v2 ${
+                  productAvailable ? "" : "is-unavailable"
+                }`}
                 key={id}
               >
                 <Link
                   to={`/product/${id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
+                  className="product-card-link"
                 >
-                  <img
-                    src={imageUrl}
-                    alt={name}
-                    style={{
-                      width: "100%",
-                      height: "150px", 
-                      objectFit: "cover",  
-                      padding: "5px",
-                      margin: "0",
-                      borderRadius: "10px 10px 10px 10px", 
-                    }}
-                  />
-                  <div
-                    className="card-body"
-                    style={{
-                      flexGrow: 1,
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      padding: "10px",
-                    }}
-                  >
-                    <div>
-                      <h5
-                        className="card-title"
-                        style={{ margin: "0 0 10px 0", fontSize: "1.2rem" }}
-                      >
-                        {name.toUpperCase()}
-                      </h5>
-                      <i
-                        className="card-brand"
-                        style={{ fontStyle: "italic", fontSize: "0.8rem" }}
-                      >
-                        {"~ " + brand}
-                      </i>
+                  <div className="product-image-wrap">
+                    <img src={imageUrl} alt={name} />
+                    {!productAvailable && (
+                      <span className="stock-badge">Out of stock</span>
+                    )}
+                  </div>
+
+                  <div className="product-card-body">
+                    <div className="product-meta">
+                      <span>{brand}</span>
+                      <h3>{name}</h3>
                     </div>
-                    <hr className="hr-line" style={{ margin: "10px 0" }} />
-                    <div className="home-cart-price">
-                      <h5
-                        className="card-text"
-                        style={{ fontWeight: "600", fontSize: "1.1rem",marginBottom:'5px' }}
+
+                    <div className="product-card-footer">
+                      <div className="price-block">
+                        <small>Price</small>
+                        <strong>
+                          <i className="bi bi-currency-rupee"></i>
+                          {price}
+                        </strong>
+                      </div>
+                      <button
+                        className="add-cart-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product);
+                        }}
+                        disabled={!productAvailable}
                       >
-                        <i class="bi bi-currency-rupee"></i>
-                        {price}
-                      </h5>
+                        {productAvailable ? "Add to Cart" : "Unavailable"}
+                      </button>
                     </div>
-                    <button
-                      className="btn-hover color-9"
-                      style={{margin:'10px 25px 0px '  }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        addToCart(product);
-                      }}
-                      disabled={!productAvailable}
-                    >
-                      {productAvailable ? "Add to Cart" : "Out of Stock"}
-                    </button> 
                   </div>
                 </Link>
               </div>
@@ -174,7 +144,7 @@ const Home = ({ selectedCategory }) => {
           })
         )}
       </div>
-    </>
+    </main>
   );
 };
 
