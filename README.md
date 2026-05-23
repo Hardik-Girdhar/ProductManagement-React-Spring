@@ -109,6 +109,21 @@ The API base path is:
 http://localhost:8080/api
 ```
 
+## Run Frontend and Backend Together
+
+From the project root on Windows, run:
+
+```bat
+start.bat
+```
+
+This opens two terminal windows:
+
+- one for the Spring Boot backend
+- one for the React frontend
+
+Keep both terminal windows open while using the application.
+
 ## Run the Frontend
 
 Open another terminal in the project root and run:
